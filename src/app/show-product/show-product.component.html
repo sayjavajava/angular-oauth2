@@ -1,0 +1,30 @@
+
+
+
+<div class="col-md-6">
+  <h2> Product Detail Details</h2>
+  
+  <table class="table table-striped">
+    <thead>
+    <tr>
+      <th class="hidden">Id</th>
+      <th>Name</th>
+      <th>Price</th>
+      <th>Quantity</th>
+      <th>In Stock</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let pro of products">
+      <td class="hidden">{{pro.id}}</td>
+      <td>{{pro.productname}}</td>
+      <td>{{pro.price}}</td>
+      <td>{{pro.quantity}}</td>
+      <td>{{pro.inStock}}</td>
+      <td><button class="btn btn-danger" (click)="deleteproduct(pro)"> Delete pro</button></td>
+    </tr>
+    </tbody>
+  </table>
+  </div>
+  

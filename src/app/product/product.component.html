@@ -1,0 +1,65 @@
+
+ <form *ngIf="active" [formGroup]="rForm" (ngSubmit)="AddProduct(rForm.value)" >
+   
+<div class="example-container container">
+  <mat-form-field hintLabel="Max 15 characters">
+    <input matInput #input maxlength="15" placeholder="Product Name" formControlName="productname"/>
+    <mat-hint align="end">{{input.value?.length || 0}}/15</mat-hint>
+  </mat-form-field>
+ <div class="alert alert-danger" *ngIf="!rForm.controls['productname'].valid && rForm.controls['productname'].touched">
+   <div *ngIf="rForm.controls['productname'].errors.minlength">name should contain atleast 4 characters </div>
+   <div *ngIf="rForm.controls['productname'].errors.required">Name is required </div>
+   
+  </div>
+
+ <br/>
+<mat-form-field hintLabel="unique">
+  <input matInput #input maxlength="15" placeholder="sku" formControlName="sku"/>
+  <mat-hint align="end">{{input.value?.length || 0}}/15</mat-hint>
+</mat-form-field>
+<div class="alert alert-danger"  *ngIf="rForm.get('sku').touched && rForm.get('sku').invalid">
+<div *ngIf="rForm.get('sku').errors.required">sku can not be null </div>
+<div *ngIf="rForm.get('sku').errors.skuExists">{{input.value}} it is already existing </div>
+</div>
+
+<br/> 
+
+    
+
+<mat-form-field hintLabel="Max 15 characters">
+  <input type="number" matInput #input maxlength="10" placeholder="Price" formControlName="price"/>
+  <mat-hint align="end">{{input.value?.length || 0}}/10</mat-hint>
+</mat-form-field>
+<div class="alert alert-danger" *ngIf="!rForm.controls['price'].valid && rForm.controls['price'].touched">
+    <div *ngIf="rForm.controls['price'].errors.minlength">Can not less than 10    </div>
+    <div *ngIf="rForm.controls['price'].errors.required">Price is required  </div>
+  
+  
+</div>
+<br/>
+
+  <mat-checkbox class="mat-checkbox-layout " formControlName="inStock"> in stock
+  </mat-checkbox>
+  <br/>
+
+<mat-form-field>
+      <mat-select formControlName="quantity" placeholder="Select quantity">
+       <mat-option
+         *ngFor="let quantity of quantity"
+         [value]="quantity"
+        >{{quantity}} </mat-option>
+      </mat-select>
+      <mat-hint align="end">Tech items</mat-hint>
+    </mat-form-field>
+    <div class="alert alert-danger" *ngIf="!rForm.controls['quantity'].valid && rForm.controls['quantity'].touched">select Quantity</div>
+    
+    <br/>
+
+</div>
+<br/>
+<button  type="submit" class="btn btn-primary btsave" >save</button>
+
+
+<div *ngIf="submitted" color="warn" class="alert-info">Product is saved successfully</div>
+</form>
+

@@ -3,51 +3,95 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/add/observable/of';
 import 'rxjs/add/operator/delay';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { map } from 'rxjs/operator/map';
+import { UserToken } from '../common/UserToken';
+
 @Injectable()
 export class AuthService {
 
- private authUrl : string = '/api/oauth/token';
-  public authTokenStale: string = 'stale_auth_token';
-  public authTokenNew: string = 'new_auth_token';
-  public currentToken: string;
-  private  clientId='waqas';
-  private clientSecret:'waqas-secret';
-  constructor(private httplclient:HttpClient) {
-      this.currentToken = this.authTokenStale;
-  }
+    private authUrl: string = '/api/oauth/token';
+    public authTokenStale: string = 'stale_auth_token';
+    // public authTokenNew: string = 'new_auth_token';
+    public currentToken: string;
 
-  getAuthToken() {
-        
-      return this.currentToken;
-  }
 
-  refreshToken(): Observable<string> {
-     
+    tokenarr: UserToken[] = [];
+    access_token: string;
+    refresh_token: string;
 
-      this.currentToken = this.authTokenNew;
+    constructor(private httplclient: HttpClient) {
+        this.currentToken = this.authTokenStale;
+    }
 
-      return Observable.of(this.authTokenNew).delay(200);
-  }
-  login(usercreds){
-    
-    console.log(usercreds);
-  
- 
-    let headers = new HttpHeaders();
-    headers = headers.append("Authorization", "Basic " + btoa("waqas:waqas-secret"));
-    headers = headers.append("Content-Type", "application/x-www-form-urlencoded");
-   // headers = headers.append("Authorization", "Basic d2FxYXM6d2FxYXMtc2VjcmV0");
- 
-     var creds = 'usernamename=' + usercreds.username + '&password=' + usercreds.password + "&grant_type=password"+ "&credentials=true" ;
+    getAuthToken() {
+        const token = localStorage.getItem("access_token");
+        if (token) {
 
-    this.httplclient.post('/api/oauth/token',creds, {headers: headers}).subscribe(response => {
-          console.log(response);
-    }, err => {
-       console.log("User authentication failed!");
-    });
- }
-          
-  }
+            return token;
+        } else
+            return null;
+    }
+
+    refreshToken(): Observable<string> {
+
+        const token_refreshed = localStorage.getItem("refresh_token");
+        //this.currentToken = this.authTokenNew;
+        let new_token: string;
+       if (token_refreshed) {
+            console.log("this refreshed token" + token_refreshed);
+
+            const headers = new HttpHeaders({
+                'Authorization': "Basic " + btoa("waqas:waqas-secret"),
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'grant_type': 'refresh_token',
+                'refresh_token': token_refreshed
+            });
+            var creds = "grant_type=refresh_token" + "&credentials=true" + "&refresh_token=" + token_refreshed;
+
+            this.httplclient.post<UserToken>('/api/oauth/token', creds, { headers: headers })
+                .subscribe(response => {
+                    console.log('new token_after_ref' + response.access_token);
+                    // this.access_token = response.access_token;
+                    console.log('expires_in:' + response.expires_in)
+            
+                    localStorage.setItem('access_token', response.access_token);
+                    //     localStorage.setItem('refresh_token', this.refresh_token);
+                    new_token = response.access_token;
+                     //    return Observable.of(new_token).delay(200);
+                }, err => {
+                    console.log("User authentication failed!");
+                });
+       }
+        console.log('i am returning');
+        return Observable.of(new_token).delay(3000);
+    }
+    login(usercreds) {
+
+        console.log(usercreds);
+
+        let headers = new HttpHeaders();
+        headers = headers.append("Authorization", "Basic " + btoa("waqas:waqas-secret"));
+        headers = headers.append("Content-Type", "application/x-www-form-urlencoded");
+        // headers = headers.append("Authorization", "Basic d2FxYXM6d2FxYXMtc2VjcmV0");
+
+        var creds = 'username=' + usercreds.username + '&password=' + usercreds.password + "&grant_type=password" + "&credentials=true";
+
+        this.httplclient.post<UserToken>('/api/oauth/token', creds, { headers: headers })
+            .subscribe(response => {
+                console.log('new token' + response.access_token);
+                // this.access_token = response.access_token;
+                console.log('expires_in:' + response.expires_in)
+                this.refresh_token = response.refresh_token;
+                localStorage.setItem('access_token', response.access_token);
+                localStorage.setItem('refresh_token', this.refresh_token);
+
+            }, err => {
+                console.log("User authentication failed!");
+            });
+    }
+
+}
+
 
 
 

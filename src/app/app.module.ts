@@ -104,11 +104,7 @@ import { LoginComponent } from './Component/login/login.component';
     {provide: ErrorHandler, useClass: AppErrorHandler},
     { provide: HTTP_INTERCEPTORS, useClass: RequestInterceptorService, multi: true },
     AuthService
-    // {
-    //   provide: HTTP_INTERCEPTORS,
-    //   useClass: TokenInterceptor,
-    //   multi: true
-    // }
+    
     ],
 
   bootstrap: [AppComponent],

@@ -41,6 +41,9 @@ import { ProductService } from './services/product.service';
 import { RequestInterceptorService } from './services/request-interceptor.service';
 import { AuthService } from './services/auth.service';
 import { LoginComponent } from './Component/login/login.component';
+import { UserComponent } from './Component/user/user.component';
+import { UserService } from './services/user.service';
+
 
 
 @NgModule(<NgModule>{
@@ -50,7 +53,9 @@ import { LoginComponent } from './Component/login/login.component';
     NavbarComponent,
     ProductComponent,
     ShowProductComponent,
-    LoginComponent
+    LoginComponent,
+    UserComponent,
+ 
   
   ],
  
@@ -71,7 +76,8 @@ import { LoginComponent } from './Component/login/login.component';
     MatInputModule,
     MatSnackBarModule,
     MatPaginatorModule,
- 
+    MatProgressSpinnerModule,
+    MatTableModule,
     MatIconModule,
     
 
@@ -84,7 +90,7 @@ import { LoginComponent } from './Component/login/login.component';
      
       {path :'home',component:ShowProductComponent},
       {path :'login',component:LoginComponent},
-     
+      {path :'user',component:UserComponent},
       //{path :'update',component:UpdateRoleComponent},
     
      
@@ -99,7 +105,7 @@ import { LoginComponent } from './Component/login/login.component';
     HttpModule,
     
   ],
-  providers: [ProductService,
+  providers: [ProductService,UserService,
     
     {provide: ErrorHandler, useClass: AppErrorHandler},
     { provide: HTTP_INTERCEPTORS, useClass: RequestInterceptorService, multi: true },

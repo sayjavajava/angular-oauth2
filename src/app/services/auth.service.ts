@@ -5,6 +5,8 @@ import 'rxjs/add/operator/delay';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operator/map';
 import { UserToken } from '../common/UserToken';
+import { BehaviorSubject, Subject } from 'rxjs';
+import {Router} from '@angular/router';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +21,7 @@ export class AuthService {
     access_token: string;
     refresh_token: string;
 
-    constructor(private httplclient: HttpClient) {
+    constructor(private httplclient: HttpClient,private router:Router) {
         this.currentToken = this.authTokenStale;
     }
 
@@ -37,7 +39,8 @@ export class AuthService {
         const token_refreshed = localStorage.getItem("refresh_token");
         //this.currentToken = this.authTokenNew;
         let new_token: string;
-       if (token_refreshed) {
+        const tokenObsr = new Subject<string>();
+        if (token_refreshed) {
             console.log("this refreshed token" + token_refreshed);
 
             const headers = new HttpHeaders({
@@ -53,17 +56,19 @@ export class AuthService {
                     console.log('new token_after_ref' + response.access_token);
                     // this.access_token = response.access_token;
                     console.log('expires_in:' + response.expires_in)
-            
+
                     localStorage.setItem('access_token', response.access_token);
                     //     localStorage.setItem('refresh_token', this.refresh_token);
-                    new_token = response.access_token;
-                     //    return Observable.of(new_token).delay(200);
+                   // new_token = response.access_token;
+                   tokenObsr.next(response.access_token);
+                   //    return Observable.of(new_token).delay(200);
                 }, err => {
                     console.log("User authentication failed!");
                 });
-       }
+        }
         console.log('i am returning');
-        return Observable.of(new_token).delay(3000);
+       // return Observable.of(tokenObsr);
+    return tokenObsr.asObservable();
     }
     login(usercreds) {
 
@@ -88,6 +93,20 @@ export class AuthService {
             }, err => {
                 console.log("User authentication failed!");
             });
+    }
+
+    logout(){
+        const token = localStorage.getItem("access_token");
+        if(token){
+          this.httplclient.get('/api/exit',{observe:'response'}).subscribe(
+           (res=>{if(res.status==200){
+               localStorage.removeItem("access_token");
+               localStorage.removeItem("refresh_token");
+               this.router.navigate(['productadd']);
+           }})
+        );
+        }
+        
     }
 
 }

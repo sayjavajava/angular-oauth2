@@ -19,56 +19,57 @@ export class RequestInterceptorService implements HttpInterceptor {
     isRefreshingToken: boolean = false;
     tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
-    constructor(private authService: AuthService,private httpclient:HttpClient) {}
+    constructor(private authService: AuthService, private httpclient: HttpClient) { }
 
     addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
-       console.log('inter:token adding'+token);
-       return req.clone({ setHeaders: { Authorization: 'Bearer ' + token  }})
-   
+        console.log('inter:token adding' + token);
+        return req.clone({ setHeaders: { Authorization: 'Bearer ' + token } })
+
     }
 
     refreshToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
-        console.log('inter:token refreshing'+token);
+        console.log('inter:token refreshing' + token);
         const headers = new HttpHeaders({
             'Authorization': "Basic " + btoa("waqas:waqas-secret"),
-             'Content-Type': 'application/x-www-form-urlencoded',
-             'grant_type': 'refresh_token',
-              'refresh_token':token
-            });
-      
-      
-       return req.clone({headers});
-     }
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'grant_type': 'refresh_token',
+            'refresh_token': token
+        });
+
+
+        return req.clone({ headers });
+    }
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
         console.log('I am intercept');
-    if(req.headers.has('Content-Type')){
-   
-        console.log('headersupper:' + req.headers.get('Authorization'));
-   
-        
+        if (req.headers.has('Content-Type')) {
+
+            console.log('headersupper:' + req.headers.get('Authorization'));
+
+
             return next.handle(req);
-        }else {
-        console.log('i am else:inter');
-        const access_token = this.authService.getAuthToken();
-        console.log('inter-token' + access_token);
-            return next.handle(this.addToken(req,access_token))
-     //   console.log('inter-token' + this.authService.getAuthToken());
-            .catch(error => {
-                if (error instanceof HttpErrorResponse) {
-                    console.log('I am intercept2');
-                    switch ((<HttpErrorResponse>error).status) {
-                        case 400:
-                            return this.handle400Error(error);
-                        case 401:
-                        console.log('I am 401');
-                            return this.handle401Error(req, next);
+        } else {
+            console.log('i am else:inter');
+            const access_token = this.authService.getAuthToken();
+            console.log('inter-token' + access_token);
+            return next.handle(this.addToken(req, access_token))
+                //   console.log('inter-token' + this.authService.getAuthToken());
+                .catch(error => {
+                    if (error instanceof HttpErrorResponse) {
+                        console.log('I am intercept2');
+                        switch ((<HttpErrorResponse>error).status) {
+                            case 400:
+                                return this.handle400Error(error);
+                            case 401:
+                                console.log('I am 401');
+                                return this.handle401Error(req, next);
+                        }
+                    } else {
+                        return Observable.throw(error);
                     }
-                } else {
-                    return Observable.throw(error);
-                }
-            });
+                });
+
+        }
         
-          }
     }
 
 
@@ -91,15 +92,15 @@ export class RequestInterceptorService implements HttpInterceptor {
 
             return this.authService.refreshToken()
                 .switchMap((newToken: string) => {
-                   console.log('map token'+newToken);
+                    console.log('map token' + newToken);
                     if (newToken) {
                         this.tokenSubject.next(newToken);
-                   
-                            
-                     //    const  clonedreq =req.clone({headers});
-                      
-                         return next.handle(this.addToken(req, newToken));
-                      
+
+
+                        //    const  clonedreq =req.clone({headers});
+
+                        return next.handle(this.addToken(req, newToken));
+
                     }
 
                     // If we don't get a new token, we are in trouble so logout.

@@ -19,12 +19,16 @@ export class LoginComponent implements OnInit {
     username: '',
     password: ''
   };
- constructor(private auth: AuthService, private router: Router) { }
+ constructor(private authservice: AuthService, private router: Router) { }
 
  
  
  login(usercreds) {
-    this.auth.login(usercreds);
+    this.authservice.login(usercreds);
+ }
+
+ logout(){
+   this.authservice.logout();
  }
 }
 

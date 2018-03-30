@@ -43,6 +43,9 @@ import { AuthService } from './services/auth.service';
 import { LoginComponent } from './Component/login/login.component';
 import { UserComponent } from './Component/user/user.component';
 import { UserService } from './services/user.service';
+import { PermissionComponent } from './Component/permission/permission.component';
+import { SignupComponent } from './Component/signup/signup.component';
+import { FieldErrorDisplayComponent } from './Component/field-error-display/field-error-display.component';
 
 
 
@@ -54,8 +57,10 @@ import { UserService } from './services/user.service';
     ProductComponent,
     ShowProductComponent,
     LoginComponent,
+    PermissionComponent,
+    SignupComponent,
     UserComponent,
- 
+    FieldErrorDisplayComponent
   
   ],
  
@@ -91,6 +96,7 @@ import { UserService } from './services/user.service';
       {path :'home',component:ShowProductComponent},
       {path :'login',component:LoginComponent},
       {path :'user',component:UserComponent},
+      {path :'signup',component:SignupComponent},
       //{path :'update',component:UpdateRoleComponent},
     
      

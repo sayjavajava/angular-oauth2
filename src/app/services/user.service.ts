@@ -5,13 +5,14 @@ import { NotFound } from '../common/NotFound';
 import { AppError } from '../common/AppError';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserUtil } from '../common/UserUtil';
+import { User } from '../common/User';
 
 @Injectable()
 export class UserService {
   private userURL:'api/users';
   constructor(private httpclient :HttpClient) { }
 
-  create(resource){
+  RegisterNewUser(resource:User){
     
     const options = {
       headers: new HttpHeaders({
@@ -20,10 +21,9 @@ export class UserService {
       })
     };
     
- console.log('in service'+resource.InStock);
-return this.httpclient.post<UserUtil[]>(this.userURL, resource);
+ console.log('in service'+resource.address.city);
+return this.httpclient.post<User[]>('api/user', resource,{observe:'response'});
 }
-
 
 findAllUsers(pageindex:number,sz:number): Observable<UserUtil[]>{
   let pagestart:number=pageindex;
@@ -38,7 +38,6 @@ return this.httpclient.get<UserUtil[]>('api/users'+'?'+'page='+pagestart+'&'+'si
 
  // return this.httpclient.get<UserUtil[]>('api/user');
 }
-
 
 DeleteUser(user:UserUtil){
 return this.httpclient.delete(this.userURL + "/" + user.id)

@@ -56,21 +56,7 @@ delete(user){
    }
 }
 
- addUser(input :HTMLInputElement){
-    let hero ={name : input.value  }
- 
- this.userservice.create(input).subscribe(response =>{
- //  hero['id'] = response.json().id;
-   this.value.splice(0,0,hero);
-   input.value='';
-},(error :AppError) =>{
- if(error instanceof BadRequest){
-   console.log('orig'+error.origionalerror);
-   alert("please check your data format ");
- }else  throw error;
-})
 
-}
 editUserPage(user: UserUtil) {
  if (user) {
 //this.matdialog.open(UpdateRoleComponent,{data:user.id});

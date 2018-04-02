@@ -43,6 +43,13 @@ DeleteUser(user:UserUtil){
 return this.httpclient.delete(this.userURL + "/" + user.id)
 }
 
+AddPermission(usercreds){
+  return this.httpclient.post('api/addpermissions', usercreds,{observe:'response'});
+}
+AddRoles(usercreds){
+  return this.httpclient.post('api/addroles', usercreds,{observe:'response'});
+}
+
   private handleError(error:Response){
     if (error.status === 400){
        return Observable.throw(new BadRequest());

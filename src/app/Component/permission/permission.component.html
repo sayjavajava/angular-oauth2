@@ -1,4 +1,46 @@
-<input [(ngModel)]="user.username">
-<input  [(ngModel)]="user.password">
+<!-- name <input [(ngModel)]="permssion.name" > 
+Description <input  [(ngModel)]="permssion.description">
 
-<button (click)="login(user)">Login</button>
+<button (click)="submit(permssion)">Add Permission</button> -->
+
+
+<!-- <br/>
+<br/>
+
+name <input [(ngModel)]="role.name" > 
+Description <input  [(ngModel)]="role.description">
+
+<button (click)="submitRole(role)">Add Role</button> -->
+
+<br/>
+<br/>
+
+
+<form #form="ngForm" (ngSubmit)=" submitPermission(form.value)">
+    <div>
+      <label>Permission:</label>
+      <input type="text" name="name" ngModel>
+    
+    
+        <label>Description:</label>
+        <input type="text" name="description" ngModel>
+      
+
+      <button type="submit">Submit</button>
+    </div>
+    </form>
+
+    <br/>
+    <br/>
+    
+    
+    <form #formm="ngForm" (ngSubmit)="submitRole(formm.value)">
+        <div>
+          <label>Role:</label>
+          <input type="text" name="name" ngModel>
+        
+          
+    
+          <button type="submit">Submit</button>
+        </div>
+        </form>

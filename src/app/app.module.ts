@@ -97,6 +97,7 @@ import { FieldErrorDisplayComponent } from './Component/field-error-display/fiel
       {path :'login',component:LoginComponent},
       {path :'user',component:UserComponent},
       {path :'signup',component:SignupComponent},
+      {path :'permissions',component:PermissionComponent},
       //{path :'update',component:UpdateRoleComponent},
     
      

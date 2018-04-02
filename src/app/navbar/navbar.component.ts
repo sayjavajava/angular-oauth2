@@ -17,13 +17,6 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
   }
 
-  // Login() {
-  //   let dialogRef = this.matdialog.open(SigninComponent, {
-  //     height: '460px',
-  //     width: '500px'
-  //   });      
-
-  // }
 
 
 }

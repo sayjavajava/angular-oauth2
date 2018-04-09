@@ -10,6 +10,7 @@ import { MatDialog, PageEvent } from '@angular/material';
 import { Observable } from 'rxjs';
 import { Loading } from '../../common/Loading';
 import { DataSource } from '@angular/cdk/table';
+import { UpdateUserComponent } from '../update-user/update-user.component';
 
 @Component({
   selector: 'app-user',
@@ -55,7 +56,11 @@ delete(user){
    this.router.navigate(['/home']);
    }
 }
-
+openDialog(){
+let dialogRef = this.matdialog.open(UpdateUserComponent, {
+  height: '460px',
+  width: '500px'
+});}
 
 editUserPage(user: UserUtil) {
  if (user) {
@@ -70,7 +75,7 @@ closeDialog(){
 ngOnInit() {
   this.pageEvent = new PageEvent;
   this.pageEvent.pageIndex = 0;
-UserComponent.urlarray=false;
+ UserComponent.urlarray=false;
 }
 
 }

@@ -1,9 +1,6 @@
 import { UserService } from './../../services/user.service';
 import { Component, OnInit } from '@angular/core';
 import { Authority } from '../../common/Authority';
-import { Observable } from 'rxjs/Observable';
-import { Persmission } from '../../common/Permission';
-
 
 @Component({
   selector: 'app-permission',
@@ -14,10 +11,8 @@ export class PermissionComponent implements OnInit {
 
   constructor(private userservice:UserService) { }
   roles :Authority[];
-  AllPermission:Persmission[] ;
   ngOnInit() {
   this.userservice.findAllRoles().subscribe(res=>this.roles=res);
- this.userservice.findAllPermissions().subscribe(res=>this.AllPermission=res);
   }
   permssion = {
     name: '',

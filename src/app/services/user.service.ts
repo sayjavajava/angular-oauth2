@@ -6,6 +6,8 @@ import { AppError } from '../common/AppError';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { UserUtil } from '../common/UserUtil';
 import { User } from '../common/User';
+import { Authority } from '../common/Authority';
+import { Persmission } from '../common/Permission';
 
 @Injectable()
 export class UserService {
@@ -35,7 +37,6 @@ return this.httpclient.get<UserUtil[]>('api/users'+'?'+'page='+pagestart+'&'+'si
    return data._embedded.users;
  })
 
-
  // return this.httpclient.get<UserUtil[]>('api/user');
 }
 
@@ -46,6 +47,18 @@ return this.httpclient.delete(this.userURL + "/" + user.id)
 AddPermission(usercreds){
   return this.httpclient.post('api/addpermissions', usercreds,{observe:'response'});
 }
+
+findAllRoles(){
+ 
+  let headers = new HttpHeaders();
+  headers = headers.append("Authorization","basic");
+  return this.httpclient.get<Authority[]>('api/roles/all',{headers:headers});
+}
+
+findAllPermissions(){
+return this.httpclient.get<Persmission[]>('api/allpermissions');
+}
+
 AddRoles(usercreds){
   return this.httpclient.post('api/addroles', usercreds,{observe:'response'});
 }

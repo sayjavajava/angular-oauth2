@@ -44,3 +44,19 @@ Description <input  [(ngModel)]="role.description">
           <button type="submit">Submit</button>
         </div>
         </form>
+
+        <br/>
+        <br/>
+
+        <ul>
+          <li *ngFor="let hero of roles">
+            {{ hero.name }}
+            {{ hero.role }}
+          </li>
+        </ul>
+
+        <br/>
+        <br/>
+        <div *ngFor="let item of AllPermission">
+          {{item.name}}
+        </div>
